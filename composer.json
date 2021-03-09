@@ -1,0 +1,25 @@
+{
+    "name": "pearton/toolzone",
+    "description": "工具集合",
+    "keywords": ["tool", "pearton", "chinese"],
+    "type": "library",
+    "require": {
+        "php": ">=7.0.0",
+        "ext-json": "*",
+        "ext-mbstring": "*",
+        "ext-curl": "*"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "pearton",
+            "email": "pearton@126.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Pearton\\toolZone\\": "src/"
+        }
+    },
+    "minimum-stability": "dev"
+}
