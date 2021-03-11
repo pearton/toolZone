@@ -114,4 +114,91 @@ class Helper
         return $response;
         //return array($http_code, $response,$requestinfo);
     }
+
+    /**
+     * 富文本提取
+     * Created by Lxd
+     * @param $value
+     * @param int $limit
+     * @param string $code
+     * @return string
+     * @noinspection PhpUnused
+     */
+    public function GetContentByRichText($value,$limit = 100,$code = 'utf-8'){
+        $html_string = htmlspecialchars_decode($value);
+        $content = str_replace(" ", "", $html_string);
+        $contents = strip_tags($content);
+        return mb_substr($contents, 0, $limit, $code);
+    }
+
+    /**
+     * 多维数组转字符串[保留html结构]
+     * @param $arr
+     * @param int $t
+     * @return string|null
+     * @noinspection PhpUnused
+     */
+    public function arr2str($arr,$t=0){
+        if(!is_array($arr)){
+            return '非数组结构数据';
+        }
+        $str = null;
+        $pad = str_pad("",$t,"\t");
+        foreach($arr as $k=>$v){
+            if(is_array($v)){
+                if(is_string($k)){
+                    $str.= $pad."'".$k."'=>array(\n".$this->arr2str($v,$t+1).$pad."),\n";
+                }else{
+                    $str.= $pad ."array(\n".$this->arr2str($v,$t+1).$pad."),\n";
+                }
+            }else{
+                if(is_string($k)){
+                    $str.= $pad."'".$k."'=>'".$v."',\n";
+                }else{
+                    $str.= $pad."'".$v."',\n";
+                }
+            }
+        }
+        return $str;
+    }
+
+    /**
+     * @param $info
+     * @param null $length
+     * @return string
+     * 提取富文本框文本
+     * @noinspection PhpUnused
+     */
+    public function richTextTochar($info,$length = null){
+        $html_string = htmlspecialchars_decode($info);              //把一些预定义的 HTML 实体转换为字符
+        $content = str_replace(" ", "", $html_string);              //将空格替换成空
+        $contents = strip_tags($content);                           //函数剥去字符串中的 HTML、XML 以及 PHP 的标签,获取纯文本内容
+        if($length !== null) {                                      //返回字符串中的指定长度
+            $contents = mb_substr($contents, 0, $length, "utf-8");
+        }
+        if(strlen($contents) < $length)
+            return $contents;
+        else
+            return $contents.'...';
+    }
+
+    /**
+     * 获取域名协议
+     * @return string
+     * @noinspection PhpUnused
+     */
+    public function get_http_type()
+    {
+        return ((isset($_SERVER['HTTPS']) && $_SERVER['HTTPS'] == 'on') || (isset($_SERVER['HTTP_X_FORWARDED_PROTO']) && $_SERVER['HTTP_X_FORWARDED_PROTO'] == 'https')) ? 'https://' : 'http://';
+    }
+
+    /**
+     * 获取加密参数
+     * @param $params
+     * @return string
+     * @noinspection PhpUnused
+     */
+    public function getSign($params){
+        return md5(join($params).'Lxdc9uBBgaerNCS9d9RAsljQEoAmGPAf2K1lk7ti+R+8Ro');
+    }
 }
